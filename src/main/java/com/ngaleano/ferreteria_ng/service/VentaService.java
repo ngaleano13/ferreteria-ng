@@ -1,6 +1,7 @@
 package com.ngaleano.ferreteria_ng.service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +20,8 @@ import lombok.AllArgsConstructor;
 public class VentaService {
     
     private VentaRepository ventaRepository;
-    private ProductoRepository productoRepository;
+
+    private ProductoService productoService;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int TICKET_CODE_LENGTH = 8;
@@ -39,32 +41,20 @@ public class VentaService {
 
 
     @Transactional
-    public Venta guardarVenta(String codProducto, int cantProducto, double precio, LocalDateTime fecha){
-
-        Producto productoExistente = productoRepository.findByCodProducto(codProducto);
-
-        if (productoExistente == null) {
-            throw new RuntimeException("No se encontro el codigo del producto");
-        }
-
-        if (productoExistente.getCantProducto() < cantProducto) {
-            throw new RuntimeException("No hay cantidades disponibles para vender");
-        }
-
-        if (fecha == null) {
-            throw new RuntimeException("La fecha no puede ser nula.");
-        }
-        
-        productoExistente.setCantProducto(productoExistente.getCantProducto() - cantProducto);
-
-
-        Venta ventaNueva = new Venta();
-
-        ventaNueva.setPrecio(precio);
-        ventaNueva.setFecha(fecha);
-        ventaNueva.setProducto(productoExistente);
-        ventaNueva.setTicketCode(generarTicketCodeUnico());
+    public Venta guardarVenta(List<String> codProductos, double precio){
     
+        List<Producto> productosExistentes = productoService.obtenerPorCodigos(codProductos);
+    
+        if (productosExistentes.size() != codProductos.size()) {
+            throw new RuntimeException("Algunos productos no se encontraron");
+        }
+    
+        Venta ventaNueva = new Venta();
+        ventaNueva.setPrecio(precio);
+        ventaNueva.setFecha(LocalDate.now());
+        ventaNueva.setProductos(productosExistentes);
+        ventaNueva.setTicketCode(generarTicketCodeUnico());
+        
         return ventaRepository.save(ventaNueva);
     }
 

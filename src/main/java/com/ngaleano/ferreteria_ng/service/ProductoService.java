@@ -1,6 +1,7 @@
 package com.ngaleano.ferreteria_ng.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,10 @@ public class ProductoService {
         return producto;
     }
 
+    public List<Producto> obtenerPorCodigos(List<String> codigos) {
+        return productoRepository.findByCodProductoIn(codigos);
+    }
+
     public List<Producto> obtenerPorNombre(String nombre){
         return productoRepository.findByNombreProducto(nombre);
     }
@@ -39,6 +44,37 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
+    public Producto guardarProducto(Producto producto){
+        return productoRepository.save(producto);
+    }
+
+    public void actualizarProducto (Long idProducto, Producto productoActualizado){
+
+        Optional<Producto> producto = productoRepository.findById(idProducto);
+        
+        Producto productoExistente = armarProducto(productoActualizado, producto);
+        productoRepository.save(productoExistente);
+    }
+
+    public void eliminarProducto(Long id){
+        productoRepository.deleteById(id);
+    }
+
+
+    private Producto armarProducto(Producto productoActualizado, Optional<Producto> producOptional){
+        Producto.ProductoBuilder productoBuilder = Producto.builder();
+
+        producOptional.ifPresent(productoExistente -> {
+            productoBuilder
+                .id(productoExistente.getId())
+                .codProducto(productoExistente.getCodProducto())
+                .nombreProducto(productoExistente.getNombreProducto())
+                .ubicacion(productoExistente.getUbicacion());
+        });
+
+        return productoBuilder.build();
+
+    }
 
 
 }
