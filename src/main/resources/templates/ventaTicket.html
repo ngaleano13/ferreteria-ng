@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="~{fragments/header}"></head>
+<body class="container mt-5">
+
+<h2>Lista Ventas</h2>
+
+<div class="mb-3">
+    <a th:href="@{/agregarVenta}" class="btn btn-warning">Agregar ventas</a>
+    <a th:href="@{/ventas}" class="btn btn-primary">Ver ventas</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Ticket Code</th>
+            <th>Producto(s)</th>
+            <th>Nombre(s)</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="venta : ${ventas}">
+            <td th:text="${venta.getFecha}"></td>
+            <td th:text="${venta.getTicketCode}"></td>
+            <td>
+                <span th:each="producto : ${venta.getProductos}" th:text="('' + ${producto.codProducto} + ', ')"></span>
+            </td>
+            <td>
+                <span th:each="producto : ${venta.getProductos}" th:text="('' + ${producto.nombreProducto} + ', ')"></span>
+            </td>
+            <td th:text="${venta.getPrecio}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>

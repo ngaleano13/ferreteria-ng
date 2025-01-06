@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="~{fragments/header}"></head>
+<body class="container mt-5">
+
+<h2>Lista Ventas</h2>
+
+<div class="mb-3">
+    <a th:href="@{/agregarVenta}" class="btn btn-warning">Agregar ventas</a>
+    <a th:href="@{/productos}" class="btn btn-primary">Ver productos</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Ticket Code</th>
+            <th>Producto(s) ID</th>
+            <th>Nombre(s)</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="venta : ${ventas}">
+            <td th:text="${venta.fecha}"></td>
+            <td th:text="${venta.ticketCode}"></td>
+            <td>
+                <span th:each="producto : ${venta.productos}" th:text="('' + ${producto.codProducto} + ', ')"></span>
+            </td>
+            <td>
+                <span th:each="producto : ${venta.productos}" th:text="('' + ${producto.nombreProducto} + ', ')"></span>
+            </td>
+            
+            <td th:text="${venta.precio}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<form action="#" method="get" onsubmit="redirectToVenta(event)">
+    <div class="form-group">
+        <label for="ticketCode">Buscar Ticket</label>
+        <input type="text" id="ticketCode" name="ticketCode" class="form-control" placeholder="Ingrese el código del ticket">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<script>
+    function redirectToVenta(event) {
+        event.preventDefault();
+        var ticketCode = document.getElementById('ticketCode').value;
+        window.location.href = '/ferreteria/ventas/' + ticketCode;
+    }
+</script>
+
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>

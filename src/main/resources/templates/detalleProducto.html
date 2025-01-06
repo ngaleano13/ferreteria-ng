@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="~{fragments/header}"></head>
+<body class="container mt-5">
+
+<h2>Lista Ventas</h2>
+
+<div class="mb-3">
+    <a th:href="@{/productos}" class="btn btn-warning">ver productos</a>
+    <a th:href="@{/ventas}" class="btn btn-primary">Ver ventas</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Codigo del producto</th>
+            <th>Nombre del producto</th>
+            <th>Ubicacion</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="producto : ${productos}">
+            <td th:text="${producto.codProducto}"></td>
+            <td th:text="${producto.nombreProducto}"></td>
+            <td th:text="${producto.ubicacion}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>
