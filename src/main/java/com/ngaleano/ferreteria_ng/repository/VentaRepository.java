@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ngaleano.ferreteria_ng.model.Venta;
 import java.util.List;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Repository
@@ -15,5 +15,5 @@ public interface VentaRepository extends JpaRepository<Venta, Long>{
 
     Optional<Venta> findByTicketCode(String ticketCode);
     
-    List<Venta> findByFecha(LocalDateTime fecha);
+    List<Venta> findByFecha(LocalDate fecha);
 }
