@@ -2,14 +2,12 @@ package com.ngaleano.ferreteria_ng.service;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.ngaleano.ferreteria_ng.model.Producto;
 import com.ngaleano.ferreteria_ng.model.Venta;
-import com.ngaleano.ferreteria_ng.repository.ProductoRepository;
 import com.ngaleano.ferreteria_ng.repository.VentaRepository;
 
 import jakarta.transaction.Transactional;
@@ -31,7 +29,7 @@ public class VentaService {
             () -> new RuntimeException("No se encontro el codigo del ticket: " +ticketCode));
     }
 
-    public List<Venta> obtenerPorFecha(LocalDateTime fecha){
+    public List<Venta> obtenerPorFecha(LocalDate fecha){
         return ventaRepository.findByFecha(fecha);
     }
 
