@@ -67,9 +67,9 @@ public class ProductoService {
         producOptional.ifPresent(productoExistente -> {
             productoBuilder
                 .id(productoExistente.getId())
-                .codProducto(productoExistente.getCodProducto())
-                .nombreProducto(productoExistente.getNombreProducto())
-                .ubicacion(productoExistente.getUbicacion());
+                .codProducto(productoActualizado.getCodProducto())
+                .nombreProducto(productoActualizado.getNombreProducto())
+                .ubicacion(productoActualizado.getUbicacion());
         });
 
         return productoBuilder.build();
