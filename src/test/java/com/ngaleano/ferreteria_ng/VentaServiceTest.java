@@ -3,8 +3,9 @@ package com.ngaleano.ferreteria_ng;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import com.ngaleano.ferreteria_ng.model.Producto;
 import com.ngaleano.ferreteria_ng.model.Venta;
-import com.ngaleano.ferreteria_ng.repository.ProductoRepository;
-import com.ngaleano.ferreteria_ng.repository.VentaRepository;
+
+import com.ngaleano.ferreteria_ng.service.ProductoService;
 import com.ngaleano.ferreteria_ng.service.VentaService;
 
 @SpringBootTest
@@ -25,82 +26,76 @@ public class VentaServiceTest {
     private VentaService ventaService;
 
     @Autowired
-    private VentaRepository ventaRepository;
+    private ProductoService productoService;
 
-    @Autowired
-    private ProductoRepository productoRepository;
+    private Producto producto1;
 
-    private Producto productoExistente;
-    
     @BeforeEach
-    void setup() {
-
-        productoExistente = new Producto();
-        productoExistente.setCodProducto("P123");
-        productoExistente.setCantProducto(100);
-        productoExistente.setUbicacion("F391");
-        productoExistente.setNombreProducto("Tornillos");
-
-        productoRepository.save(productoExistente);
+    public void setup() {
+        producto1 = new Producto();
+        producto1.setCodProducto("DES193");
+        producto1.setNombreProducto("Martillo");
+        producto1.setUbicacion("A1");
+        producto1 = productoService.guardarProducto(producto1);
     }
 
     @Test
     @DirtiesContext
-    void testObtenerPorTicketCode() {
-        Venta venta = new Venta();
-        venta.setPrecio(200.0);
-        venta.setFecha(LocalDateTime.now());
-        venta.setProducto(productoExistente);
-        venta.setTicketCode("ABC12345");
+    public void testObtenerPorTicketCode() {
+        List<String> codigosProductos = List.of("DES193");
+        Venta venta = ventaService.guardarVenta(codigosProductos, 100.0);
 
-        ventaRepository.save(venta);
+        Venta resultado = ventaService.obtenerPorTicketCode(venta.getTicketCode());
 
-        Venta result = ventaService.obtenerPorTicketCode("ABC12345");
-
-        assertNotNull(result);
-        assertEquals("ABC12345", result.getTicketCode());
+        assertNotNull(resultado);
+        assertEquals(venta.getTicketCode(), resultado.getTicketCode());
     }
 
     @Test
     @DirtiesContext
-    void testGuardarVenta() {
-        String codProducto = "P123";
-        int cantProducto = 5;
+    public void testObtenerPorTicketCodeNoEncontrado() {
+        String ticketCodeInexistente = "TCKT1383";
+
+        assertThrows(RuntimeException.class, () -> {
+            ventaService.obtenerPorTicketCode(ticketCodeInexistente);
+        });
+    }
+
+    @Test
+    @DirtiesContext
+    public void testGuardarVenta() {
+        List<String> codigosProductos = List.of("DES193");
         double precio = 100.0;
-        LocalDateTime fecha = LocalDateTime.now();
 
-        Venta venta = ventaService.guardarVenta(codProducto, cantProducto, precio, fecha);
-
-        assertNotNull(venta);
+        Venta venta = ventaService.guardarVenta(codigosProductos, precio);
+        
+        assertNotNull(venta.getTicketCode());
         assertEquals(precio, venta.getPrecio());
-        assertEquals(codProducto, venta.getProducto().getCodProducto());
-
-        Producto productoActualizado = productoRepository.findByCodProducto(codProducto);
-        assertEquals(95, productoActualizado.getCantProducto());
+        assertEquals(1, venta.getProductos().size());
+        assertEquals("Martillo", venta.getProductos().get(0).getNombreProducto());
     }
 
     @Test
     @DirtiesContext
-    void testGuardarVentaProductoNoExistente() {
-        String codProducto = "P241824";
+    public void testListarVentas() {  
+        List<String> codigosProductos = List.of("DES193");
+        ventaService.guardarVenta(codigosProductos, 100.0);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            ventaService.guardarVenta(codProducto, 5, 100.0, LocalDateTime.now());
-        });
+        List<Venta> ventas = ventaService.listarVentas();
 
-        assertEquals("No se encontro el codigo del producto", exception.getMessage());
+        assertNotNull(ventas);
+        assertTrue(ventas.size() > 0);
     }
 
     @Test
     @DirtiesContext
-    void testGuardarVentaNoHayCantidadSuficiente() {
-        String codProducto = "P123";
-        int cantProducto = 200;
+    public void testObtenerPorFecha() {
+        List<String> codigosProductos = List.of("DES193");
+        Venta venta = ventaService.guardarVenta(codigosProductos, 100.0);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            ventaService.guardarVenta(codProducto, cantProducto, 100.0, LocalDateTime.now());
-        });
+        List<Venta> ventas = ventaService.obtenerPorFecha(venta.getFecha());
 
-        assertEquals("No hay cantidades disponibles para vender", exception.getMessage());
+        assertNotNull(ventas);
+        assertTrue(ventas.size() > 0);
     }
 }
