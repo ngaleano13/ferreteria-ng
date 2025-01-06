@@ -1,7 +1,5 @@
 package com.ngaleano.ferreteria_ng.model;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
