@@ -1,6 +1,7 @@
 package com.ngaleano.ferreteria_ng.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -20,18 +21,21 @@ public class Venta {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "ticketCode" , unique = true, nullable = false)
     private String ticketCode;
 
     @NotNull(message = "El precio no puede ser nulo")
     private double precio;
 
     @NotNull(message = "La fecha de venta no puede ser nula")
-    private LocalDateTime fecha;
+    private LocalDate fecha;
 
-    @ManyToOne
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
-
+    @ManyToMany
+    @JoinTable(
+        name = "venta_producto", 
+        joinColumns = @JoinColumn(name = "venta_id"), 
+        inverseJoinColumns = @JoinColumn(name = "producto_cod")
+    )
+    private List<Producto> productos;
 
 }
