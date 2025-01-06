@@ -61,10 +61,10 @@ public class ProductoService {
     }
 
 
-    private Producto armarProducto(Producto productoActualizado, Optional<Producto> producOptional){
+    private Producto armarProducto(Producto productoActualizado, Optional<Producto> productoOptional){
         Producto.ProductoBuilder productoBuilder = Producto.builder();
 
-        producOptional.ifPresent(productoExistente -> {
+        productoOptional.ifPresent(productoExistente -> {
             productoBuilder
                 .id(productoExistente.getId())
                 .codProducto(productoActualizado.getCodProducto())
