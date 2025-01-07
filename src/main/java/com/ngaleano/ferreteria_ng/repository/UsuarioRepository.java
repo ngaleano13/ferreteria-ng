@@ -11,5 +11,7 @@ import com.ngaleano.ferreteria_ng.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     
     Optional<Usuario> findById(Long id);
+
+    Optional<Usuario> findByUsername(String username);
     
 }
