@@ -26,7 +26,14 @@ public class ProductoViewController {
         return "listaProductos";
     }
 
-    @GetMapping("/guardarProducto")
+
+    @GetMapping("/agregarProducto")
+    public String mostrarFormProducto(Model model) {
+        model.addAttribute("productos", new Producto());
+        return "agregarProductoForm";
+    }
+
+    @PostMapping("/guardarProducto")
     public String guardarProducto(@ModelAttribute Producto producto) {
         productoService.guardarProducto(producto);
         return "redirect:/productos";
@@ -34,7 +41,7 @@ public class ProductoViewController {
 
     @GetMapping("/productos/{codigo}")
     public String buscarPorCodigo(@PathVariable String codigo, Model model) {
-        model.addAttribute("producto", productoService.obtenerPorCodigo(codigo));
+        model.addAttribute("productos", productoService.obtenerPorCodigo(codigo));
         return "detalleProducto";
     }
     
