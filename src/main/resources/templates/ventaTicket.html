@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head th:insert="~{fragments/header}"></head>
+<head th:insert="~{fragments/headerNoLogin}"></head>
 <body class="container mt-5">
 
-<h2>Lista Ventas</h2>
-
-<div class="mb-3">
-    <a th:href="@{/agregarVenta}" class="btn btn-warning">Agregar ventas</a>
-    <a th:href="@{/ventas}" class="btn btn-primary">Ver ventas</a>
+<div th:each="venta : ${ventas}">
+    <h2>Compra: <span th:text="${venta.getTicketCode}"></span></h2>
 </div>
 
-<table class="table table-bordered">
+
+<table class="table table-bordered text-center align-middle table-responsive">
     <thead>
-        <tr>
-            <th>Fecha</th>
+        <tr class="text-center">
+            <th class="text-center">Fecha</th>
             <th>Ticket Code</th>
             <th>Producto(s)</th>
             <th>Nombre(s)</th>
             <th>Precio</th>
+            <th>Consultas</th>
         </tr>
     </thead>
     <tbody>
@@ -25,15 +24,21 @@
             <td th:text="${venta.getFecha}"></td>
             <td th:text="${venta.getTicketCode}"></td>
             <td>
-                <span th:each="producto : ${venta.getProductos}" th:text="('' + ${producto.codProducto} + ', ')"></span>
+                <span th:each="producto : ${venta.getProductos}" th:text="('' + ${producto.codProducto} + '  ')"></span>
             </td>
             <td>
-                <span th:each="producto : ${venta.getProductos}" th:text="('' + ${producto.nombreProducto} + ', ')"></span>
+                <span th:each="producto : ${venta.getProductos}" th:text="('' + ${producto.nombreProducto} + '  ')"></span>
             </td>
             <td th:text="${venta.getPrecio}"></td>
+            <td><a class="btn btn-success">Whatsapp</a> </td>
         </tr>
     </tbody>
 </table>
+
+<a sec:authorize="isAuthenticated()" class="btn btn-danger" href="/ventas">Ir a Ventas</a>
+
+<a href="/" sec:if class="btn btn-outline-danger">Volver</a>
+
 
 <div th:replace="~{fragments/footer}"></div>
 

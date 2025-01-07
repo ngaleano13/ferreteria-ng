@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="~{fragments/headerNoLogin}"></head>
+<body class="container mt-5">
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Buscar Ticket</h2>
+                <form action="#" method="get" onsubmit="redirectToVenta(event)">
+                    <div class="form-group">
+                        <label for="ticketCode">Codigo</label>
+                        <input type="text" id="ticketCode" name="ticketCode" class="form-control" placeholder="Ingrese el código del ticket">
+                    </div>
+                    <br>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function redirectToVenta(event) {
+        event.preventDefault();
+        var ticketCode = document.getElementById('ticketCode').value;
+        window.location.href = '/ventas/' + ticketCode;
+    }
+</script>
+
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>

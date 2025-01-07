@@ -7,6 +7,7 @@
 
 <div class="mb-3">
     <a th:href="@{/agregarVenta}" class="btn btn-warning">Agregar ventas</a>
+    <a th:href="@{/agregarProducto}" class="btn btn-danger">Agregar producto</a>
     <a th:href="@{/productos}" class="btn btn-primary">Ver productos</a>
 </div>
 
@@ -49,7 +50,7 @@
     function redirectToVenta(event) {
         event.preventDefault();
         var ticketCode = document.getElementById('ticketCode').value;
-        window.location.href = '/ferreteria/ventas/' + ticketCode;
+        window.location.href = '/ventas/' + ticketCode;
     }
 </script>
 
